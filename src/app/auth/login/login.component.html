@@ -1,0 +1,102 @@
+<section
+    class="hero-overlay min-h-screen flex items-center justify-center p-4 bg-gradient-to-b via-black/80 to-black">
+
+    <div class="card w-full max-w-md bg-neutral/50 border-2 border-primary/20 shadow-2xl overflow-hidden">
+
+        <div class="h-2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+
+        <div class="card-body p-6 md:p-8">
+
+            <div class="text-center mb-8 space-y-2">
+                <h2 class="text-3xl md:text-4xl font-serif italic font-black uppercase tracking-widest text-primary/80">
+                    Acceso
+                </h2>
+                <div class="flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-primary/30"></span>
+                        <span class="text-xs uppercase tracking-widest text-accent font-bold">
+                            Protocolo de Seguridad
+                        </span>
+                    <span class="h-px w-8 bg-primary/30"></span>
+                </div>
+                <p class="text-xs italic opacity-40">
+                    "En vuestra confianza, nuestro poder"
+                </p>
+            </div>
+
+            <!--  -->
+            @if (hasError()) {
+            <div class="alert bg-error/10 border border-error/20 text-error mb-6 py-3 text-center animate-pulse">
+                <span class="text-xs uppercase font-black tracking-widest">
+                    {{ errorMesage() }}
+                </span>
+            </div>
+            }
+
+            <!--  -->
+            @if (isPosting()) {
+            <div class="flex flex-col items-center py-10 space-y-4">
+                <span class="loading loading-infinity loading-lg text-primary"></span>
+                <p class="text-xs uppercase tracking-widest text-primary animate-pulse">
+                    Abriendo Bóveda...
+                </p>
+            </div>
+            }
+
+            <!--  -->
+            @else {
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"
+                class="flex flex-col items-center space-y-6 w-full">
+
+                <div class="form-control w-full max-w-xs text-center">
+                    <label class="label justify-center">
+                        <span class="label-text text-xs uppercase text-primary/80 tracking-widest">
+                            Canal Encriptado
+                        </span>
+                    </label>
+                    <input formControlName="email"
+                        type="email"
+                        placeholder="socio@gotham.dark"
+                        class="input input-ghost input-sm w-full bg-base-100/50 border-primary/10 focus:bg-base-100 transition text-center text-sm"
+                    />
+                </div>
+
+                <div class="form-control w-full max-w-xs text-center">
+                    <label class="label justify-center">
+                        <span class="label-text text-xs uppercase text-primary/80 tracking-widest">
+                            Codigo de Boveda
+                        </span>
+                    </label>
+                    <input formControlName="password"
+                        type="password"
+                        placeholder="••••••••"
+                        class="input input-ghost input-sm w-full bg-base-100/50 border-primary/10 focus:bg-base-100 transition text-center text-sm"
+                    />
+                </div>
+
+                <!--  -->
+                <div class="pt-4 w-full max-w-xs">
+                    <button type="submit"
+                        class="btn btn-primary btn-sm md:btn-md btn-block tracking-widest uppercase shadow-md hover:scale-105 transition font-serif">
+                        Identificarse
+                    </button>
+                </div>
+
+                <div class="text-center pt-6 border-t border-primary/10 w-full max-w-xs mt-2 space-y-2">
+                    <p class="text-xs text-center opacity-40 uppercase tracking-widest">
+                        ¿Aún no tiene contrato con nosotros?
+                    </p>
+                    <a routerLink="/auth/register"
+                        class="text-xs font-black link link-hover text-accent hover:text-primary tracking-widest transition-colors uppercase font-serif">
+                        Solicitar unirse a nosotros
+                    </a>
+                </div>
+            </form>
+            }
+
+        </div>
+    </div>
+</section>
+
+
+
+<!-- boton redondo rounded-full -->
