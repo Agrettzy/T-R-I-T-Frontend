@@ -26,11 +26,6 @@ export const bankRoutes: Routes = [
                 loadComponent: () => import('./history-transactions/history-transactions.component')
                     .then(m => m.HistoryransactionsComponent)
             },
-            // {
-            //     path: 'balance',
-            //     loadComponent: () => import('./balance/balance.component')
-            //         .then(m => m.BalanceComponent)
-            // },
             {
                 path: '',
                 redirectTo: 'wallet',

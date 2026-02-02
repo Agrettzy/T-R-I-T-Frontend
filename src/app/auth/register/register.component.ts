@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
+import { AuthService } from '../services/auth.service';
+
 
 @Component({
     selector: 'register',
@@ -11,6 +13,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 export class RegisterComponent {
 
+    authService = inject(AuthService)
     fb = inject(FormBuilder);
     router = inject(Router);
 
@@ -18,8 +21,8 @@ export class RegisterComponent {
     hasError = signal(false);
     errorMesage = signal('');
 
-    registerForm = this.fb.group({
-        alias: ['', [Validators.required]],
+    registerForm = this.fb.nonNullable.group({
+        fullName: ['', [Validators.required]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
     });
@@ -35,12 +38,19 @@ export class RegisterComponent {
         }
 
         this.isPosting.set(true);
-        this.hasError.set(false);
 
-        setTimeout(() => {
-            this.isPosting.set(false);
-            this.router.navigate(['/auth/login']);
-        }, 2000);
+        const data = this.registerForm.getRawValue();
+        this.authService.register(data).subscribe({
+            next: () => {
+                this.isPosting.set(false);
+                this.router.navigate(['/auth/login']);
+            },
+            error: (err) => {
+                this.isPosting.set(false);
+                this.hasError.set(true);
+                this.errorMesage.set(err.error.message || 'Error al crear socio');
+            }
+        });
 
     }
 
@@ -49,13 +59,13 @@ export class RegisterComponent {
         if (!control || !control.errors || !control.touched)
             return null;
 
-        if ( control.hasError('required') )
+        if (control.hasError('required'))
             return ('Este campo es vital para ser socio');
 
-        if ( control.hasError('email') )
+        if (control.hasError('email'))
             return ('Canal encriptado comprometido o invalido');
 
-        if ( control.hasError('minlength') )
+        if (control.hasError('minlength'))
             return ('Minimo 6 caracteres de seguridad, entre ellos al menos una mayuscula y un numero');
 
         return ('Error de validacion no identificado');

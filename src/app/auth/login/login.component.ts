@@ -1,8 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+
+
 import { AuthService } from '../services/auth.service';
+
+
 
 @Component({
     selector: 'login',
@@ -13,7 +17,6 @@ import { AuthService } from '../services/auth.service';
 export class LoginComponent {
 
     authService = inject(AuthService)
-
     fb = inject(FormBuilder);
     router = inject(Router);
 
@@ -37,19 +40,17 @@ export class LoginComponent {
         this.isPosting.set(true);
         this.hasError.set(false);
 
-        const { email = '', password = '' } = this.loginForm.value;
+        const { email, password } = this.loginForm.value;
 
         this.authService.login(email!, password!).subscribe({
             next: (isAuthenticated) => {
-                setTimeout(() => {
-                    if (isAuthenticated) {
-                        this.router.navigateByUrl('/bank/wallet');
-                    } else {
-                        this.isPosting.set(false);
-                        this.hasError.set(true);
-                        this.errorMesage.set('Credenciales invalidas')
-                    }
-                });
+                if (isAuthenticated) {
+                    this.router.navigateByUrl('/bank/wallet');
+                } else {
+                    this.isPosting.set(false);
+                    this.hasError.set(true);
+                    this.errorMesage.set('Credenciales invalidas')
+                }
             },
             error: (err) => {
                 this.isPosting.set(false);
@@ -58,17 +59,6 @@ export class LoginComponent {
                 console.error('login error', err)
             }
         });
-
-
-        // this.authService.login(email!, password!).subscribe({
-        //     next: (isAuthenticated) => {
-        //         if (isAuthenticated) {
-        //             console.log(' Navegando a la wallet...');
-        //             this.router.navigateByUrl('/bank/wallet');
-        //         }
-        //     }
-        // });
-
 
     }
 

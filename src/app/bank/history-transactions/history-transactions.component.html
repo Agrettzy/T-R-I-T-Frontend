@@ -1,1 +1,98 @@
-<p>history-transactions works!</p>
+<section class="min-h-screen bg-gradient-to-b from-neutral via-black/90 to-black p-4 lg:p-12">
+    <div class="max-w-5xl mx-auto space-y-8">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-black text-white tracking-tighter uppercase italic">
+                    Movimientos
+                </h1>
+                <p class="text-xs text-primary font-mono uppercase tracking-widest opacity-60">
+                    Registro General de Operaciones
+                </p>
+            </div>
+            <a routerLink="/bank/wallet" class="btn btn-xs btn-primary shadow-[0_0_10px_#57ffb4]">
+                Volver
+            </a>
+        </div>
+
+        <div class="card bg-neutral/40 backdrop-blur-xl border border-white/5 shadow-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="table table-zebra w-full">
+
+                    <thead class="bg-primary/10 text-primary font-mono border-b border-white/5">
+                        <tr>
+                            <th class="py-4 text-sm">Fecha / ID</th>
+                            <th class="text-sm">Socio / Detalle</th>
+                            <th class="text-sm">Estado</th>
+                            <th class="text-right text-sm">Monto</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <!--  -->
+                        @for (tx of walletService.historyResource.value(); track tx.transactionId) {
+                        <tr class="hover:bg-white/5 transition-colors border-b border-white/5">
+                            <td class="py-4">
+                                <div class="text-base font-xs text-gray-200">
+                                    {{ tx.createdAt | date:'short' }}
+                                </div>
+                                <div class="text-xs font-mono text-gray-500 uppercase tracking-widest">
+                                    #{{ tx.transactionId.substring(0,8) }}
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="flex items-center gap-3">
+
+                                    <div class="bg-black/20 shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-xl"
+                                        [class]="tx.type === 'received' ? 'shadow-[0_0_10px_#57ffb4] text-success border-success/20 ' : 'shadow-[0_0_10px_#57ffb4] text-warning border-warning/20'">
+                                        {{ tx.type === 'received' ? '↓' : '↑' }}
+                                    </div>
+
+                                    <div>
+                                        <div class="text-sm font-bold text-gray-400 ">
+                                            {{ tx.type === 'sent' ? 'Enviada' : 'Recibido' }}
+                                        </div>
+                                        <div class="text-xs text-gray-400 font-mono">
+                                            {{ tx.type === 'sent' ? 'Para: ' + tx.toName : 'De: ' + tx.fromName }}
+                                            <p> {{ tx.type === 'sent' ? 'Cuenta: ' + tx.toAccount : 'Cuenta: ' + tx.fromAccount }} </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge px-3 py-1 text-xs font-mono rounded-full"
+                                    class="{{ tx.status === 'success' ? 'bg-green-900 text-white shadow-sm' : 'bg-yellow-500 text-black' }}">
+                                    {{ tx.status === 'success' ? 'Success' : 'Pendiente' }}
+                                </span>
+                            </td>
+
+                            <td class="text-right">
+                                <div class="text-base font-mono font-bold"
+                                    class="{{ tx.type === 'received' ? 'text-green-400' : 'text-red-400' }}">
+                                    {{ tx.type === 'received' ? '+' : '-' }} ₿ {{ tx.amount }}
+                                </div>
+                            </td>
+                        </tr>
+                        }
+
+                        <!--  -->
+                        @empty {
+                            <tr>
+                                <td colspan="4" class="py-20 text-center">
+                                    <div class="flex flex-col items-center gap-4 opacity-30">
+                                        <span class="loading loading-ring loading-lg text-primary"></span>
+                                        <p class="font-mono text-sm uppercase tracking-widest">
+                                            Sincronizando con la red T.R.I.T...
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

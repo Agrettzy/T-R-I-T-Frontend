@@ -1,8 +1,5 @@
-<section
-    class="hero-overlay min-h-screen flex items-center justify-center p-4 bg-gradient-to-b via-black/80 to-black">
-
+<section class="hero-overlay min-h-screen flex items-center justify-center p-4 bg-gradient-to-b via-black/80 to-black">
     <div class="card w-full max-w-md bg-neutral/50 border-2 border-primary/20 shadow-2xl overflow-hidden">
-
         <div class="h-1.5 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
 
         <div class="card-body px-6 py-6 md:px-10">
@@ -53,16 +50,17 @@
                                 Identidad de Campo
                             </span>
                         </label>
-                        <input formControlName="alias"
+                        <input formControlName="fullName"
                             type="text"
                             placeholder="Seudonimo"
                             class="input input-ghost input-sm w-full bg-base-100/50 border-primary/10 focus:bg-base-100 transition text-center text-sm"
-                            [class.border-error]="registerForm.get('alias')?.touched && registerForm.get('alias')?.invalid"
+                            [class.border-error]="registerForm.get('fullName')?.touched && registerForm.get('fullName')?.invalid"
                         />
+
                         <!--  -->
-                        @if( getError('alias') ) {
+                        @if( getError('fullName') ) {
                             <span class="text-[10px] font-black tracking-widest text-error">
-                                {{ getError('alias') }}
+                                {{ getError('fullName') }}
                             </span>
                         }
                     </div>
@@ -79,6 +77,7 @@
                             class="input input-ghost input-sm w-full bg-base-100/50 border-primary/10 focus:bg-base-100 transition text-center text-sm"
                             [class.border-error]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
                         />
+
                         <!--  -->
                         @if( getError('email') ) {
                             <span class="text-[10px] font-black tracking-widest text-error">
@@ -99,6 +98,8 @@
                             class="input input-ghost input-sm w-full bg-base-100/50 border-primary/10 focus:bg-base-100 transition text-center text-sm"
                             [class.border-error]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
                         />
+
+                        <!--  -->
                         @if( getError('password') ) {
                             <span class="text-[10px] font-black tracking-widest text-error">
                                 {{ getError('password') }}

@@ -1,22 +1,21 @@
 <section class="min-h-screen bg-gradient-to-b from-neutral via-black/80 to-black">
     <nav class="navbar bg-neutral/50 backdrop-blur-md shadow-md px-4 lg:px-12 border-b border-primary/20">
-        <div class="flex-1">
-            <a class="btn btn-ghost text-xl font-black tracking-tighter text-primary">
+        <div class="flex-1 flex items-center gap-6">
+            <a class="text-xl font-black tracking-tighter text-primary">
                 T.R.I.T
             </a>
+            <span class="text-[10px] font-bold">
+                En un mundo de buitres, confía en el Pingüino❄️
+            </span>
         </div>
 
-        <div class="flex-none">
-            <ul class="menu menu-horizontal px-1 font-bold gap-2 text-gray-200">
-                <li class="hidden sm:block">
-                    <span class="text-xs opacity-70 mr-2">
-                        socio: {{ autServices.user()?.fullName }}
-                    </span>
-                    <a routerLink="/bank/profile" class="hover:text-primary">
-                        Perfil
-                    </a>
-                </li>
-            </ul>
+        <div class="flex items-center gap-6 text-gray-200 font-bold">
+            <a routerLink="/bank/profile" class="hover:text-primary transition-colors">
+                Perfil
+            </a>
+            <a (click)="autServices.logout()" class="hover:text-error transition-colors cursor-pointer">
+                Cerrar sesión
+            </a>
         </div>
     </nav>
 
@@ -30,101 +29,111 @@
         }
         <!--  -->
         @else {
+            <div class="stats stats-vertical md:stats-horizontal shadow-2xl bg-gradient-to-b via-black/50 to-neutral/80 w-full border border-white/10 backdrop-blur-md">
+                <div class="stat p-6">
+                    <div class="stat-title text-gray-400">
+                        Saldo Disponible
+                    </div>
+                    <div class="stat-value text-primary text-3xl md:text-5xl font-mono break-all">
+                        ₿ {{ walletServices.balance() }}
+                    </div>
 
-        <div
-            class="stats shadow-2xl bg-gradient-to-b via-black/50 to-neutral/80 w-full border border-white/10 backdrop-blur-md">
-            <div class="stat">
-                <div class="stat-title text-gray-400">
-                    Saldo Disponible
-                </div>
-                <div class="stat-value text-primary text-5xl font-mono">
-                    ₿ {{ walletServices.balance() }}
+                    <div class="stat-actions mt-4 flex gap-2 flex-wrap">
+                        <button routerLink="/bank/transfer"
+                            class="btn btn-sm btn-ghost border border-white/10 hover:bg-primary hover:text-black">
+                            Transferir
+                        </button>
+                    </div>
                 </div>
 
-                <div class="stat-actions mt-4 flex gap-2">
-                    <button routerLink="/bank/transfer"
-                        class="btn btn-sm btn-ghost border border-white/10 hover:bg-primary hover:text-black">
-                        Transferir
-                    </button>
+                <div class="stat border-t border-white/5 md:border-t-0 md:border-l p-6">
+                    <div class="stat-title text-gray-400">
+                        No. Cuenta
+                    </div>
+                    <div class="stat-value text-sky-300 text-lg md:text-2xl font-mono bg-black/30 px-3 py-2 rounded-lg shadow-md break-all">
+                        {{ walletServices.accountKey() }}
+                    </div>
                 </div>
             </div>
 
-            <div class="stat hidden md:grid">
-                <div class="stat-title text-gray-400">
-                    No. Cuenta
-                </div>
-                <div class="stat-value text-sky-300 text-2xl font-mono bg-black/40 px-3 py-1 rounded-lg shadow-md">
-                    {{ walletServices.accountKey() }}
-                </div>
-            </div>
-        </div>
+            <section class="card bg-neutral/80 backdrop-blur-md shadow-xl border border-white/10">
+                <div class="card-body p-0">
+                    <div class="flex justify-between items-center p-6 pb-2 border-b border-white/10">
+                        <h2 class="card-title font-bold text-lg uppercase tracking-wider text-white">
+                            Ultimos Movimientos
+                        </h2>
+                        <a routerLink="/bank/history"
+                            class="btn btn-sm btn-ghost border border-white/10 hover:bg-primary hover:text-black">
+                            Ver todos
+                        </a>
+                    </div>
 
-        <section class="card bg-neutral/80 backdrop-blur-md shadow-xl border border-white/10">
-            <div class="card-body p-0">
-                <div class="flex justify-between items-center p-6 pb-2 border-b border-white/10">
-                    <h2 class="card-title font-bold text-lg uppercase tracking-wider text-white">
-                        Últimos Movimientos
-                    </h2>
-                    <a routerLink="/bank/history" class="btn btn-ghost btn-xs text-primary">
-                        Ver todos
-                    </a>
+                    <div class="overflow-x-auto w-full">
+                        <!-- w-full -->
+                        <table class="table table-zebra w-full table-fixed md:table-auto">
+                            <!-- table-fixed md:table-auto -->
+                            <thead class="bg-neutral/70 text-gray-200">
+                                <tr>
+                                    <th class="w-1/2 md:w-auto">
+                                        <!-- w-1/2 md:w-auto -->
+                                        Concepto
+                                    </th>
+                                    <th>Estado</th>
+                                    <th class="text-right">
+                                        Monto
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--  -->
+                                @for (tx of historyResource.value(); track $index) {
+                                    <tr class="hover">
+                                        <td>
+                                            <div class="flex items-center gap-3">
+                                                <div class="avatar placeholder sm:flex">
+                                                    <div [class]="tx.type === 'received' ? 'bg-success/20 text-success' : 'bg-error/20 text-error'"
+                                                        class="rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                                                        <span>
+                                                            {{ tx.type === 'received' ? '↓' : '↑' }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="min-w-0 flex-1">
+                                                    <div [class]="tx.type === 'sent' ? tx.toAccount : tx.fromAccount"
+                                                        class="text-primary/80 font-medium truncate">
+                                                        {{ tx.type === 'sent' ? 'Enviado a: ' + tx.toAccount : 'Recibido de: ' + tx.fromAccount }}
+                                                    </div>
+                                                    <div class="text-[10px] md:text-xs opacity-50">
+                                                        {{ tx.createdAt | date:'short' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                     <td>
+                                            <span [class]="tx.status === 'success' ? 'badge-success' : 'badge-warning'"
+                                                class="badge badge-xs md:badge-sm">
+                                                {{ tx.status }}
+                                            </span>
+                                        </td>
+                                        <td [class]="tx.type === 'received' ? 'text-success' : 'text-error'"
+                                            class="text-right font-bold text-xs md:text-sm whitespace-nowrap">
+                                            {{ tx.type === 'received' ? '+' : '-' }} ₿ {{ tx.amount }}
+                                        </td>
+                                    </tr>
+                                }
+                                <!--  -->
+                                @empty {
+                                    <tr>
+                                        <td colspan="3" class="text-center py-10 opacity-30 italic">
+                                            No hay transacciones detectadas
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-
-                <div class="overflow-x-auto">
-                    <table class="table table-zebra w-full">
-                        <thead class="bg-neutral/70 text-gray-200">
-                            <tr>
-                                <th>Concepto</th>
-                                <th>Estado</th>
-                                <th class="text-right">Monto</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @for (tx of walletServices.historyResource.value(); track tx.id) {
-                            <tr class="hover">
-                                <td>
-                                    <div class="flex items-center gap-3">
-                                        <div class="avatar placeholder">
-                                            <div [class]="tx.type === 'received' ? 'bg-success/20 text-success' : 'bg-error/20 text-error'"
-                                                class="rounded-full w-8 h-8 flex items-center justify-center font-bold">
-                                                <span>
-                                                    {{ tx.type === 'received' ? '↓' : '↑' }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div>
-                                          <div class="font-bold text-primary/80">
-                                                {{ tx.type === 'sent' ? 'Enviado a ' + tx.toName : 'Recibido de ' + tx.fromName }}
-                                            </div>
-                                            <div class="text-xs opacity-50">
-                                                {{ tx.createdAt }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span [class]="tx.status === 'completed' ? 'badge-success' : 'badge-warning'"
-                                        class="badge badge-sm">
-                                        {{ tx.status }}
-                                    </span>
-                                </td>
-                                <td [class]="tx.type === 'received' ? 'text-success' : 'text-error'"
-                                    class="text-right font-bold">
-                                    {{ tx.type === 'received' ? '+' : '-' }} ₿ {{ tx.amount }}
-                                </td>
-                            </tr>
-                            } @empty {
-                            <tr>
-                                <td colspan="3" class="text-center py-10 opacity-30 italic">
-                                    No hay transacciones detectadas
-                                </td>
-                            </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
+            </section>
         }
     </div>
 </section>

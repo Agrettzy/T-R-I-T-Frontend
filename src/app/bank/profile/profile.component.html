@@ -1,1 +1,85 @@
-<p>profile works!</p>
+<section class="min-h-screen bg-gradient-to-b from-neutral via-black/80 to-black">
+
+    <nav class="navbar bg-neutral/50 backdrop-blur-md shadow-md px-4 lg:px-12 border-b border-primary/20">
+        <div class="flex-1">
+            <a routerLink="/bank/dashboard" class="btn btn-ghost text-xl font-black tracking-tighter text-primary">
+                T.R.I.T
+            </a>
+        </div>
+        <div class="flex-none">
+            <ul class="menu menu-horizontal px-1 font-bold gap-4 text-gray-200">
+                <li>
+                    <a routerLink="/bank/wallet" class="hover:text-primary transition-colors">
+                        Volver al Panel
+                    </a>
+                </li>
+                <li>
+                    <a (click)="authService.logout()" class="hover:text-error transition-colors cursor-pointer">
+                        Cerrar sesión
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="max-w-3xl mx-auto p-6 pt-12">
+        <div class="card bg-neutral/40 backdrop-blur-xl border border-white/10 shadow-2xl">
+            <div class="card-body p-8 space-y-6">
+
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h2 class="text-3xl font-bold text-white tracking-tight">
+                            {{ walletServices.userName() }}
+                        </h2>
+                        <p class="text-gray-400 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                            Socio Activo T.R.I.T
+                        </p>
+                    </div>
+                    <div
+                        class="badge badge-outline border-yellow-300 text-primary p-3 font-mono uppercase tracking-widest">
+                        Verificado
+                    </div>
+                </div>
+
+                <div class="divider border-white/5"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <label class="text-xs uppercase text-primary font-bold tracking-widest opacity-70">
+                            Canal encriptado
+                        </label>
+                        <p class="text-ms text-gray-200 bg-black/30 p-2 rounded border border-white/5 italic">
+                            {{ walletServices.userEmail() }}
+                        </p>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label class="text-xs uppercase text-primary font-bold tracking-widest opacity-70">
+                            No. Cuenta
+                        </label>
+                        <p class="text-lg text-sky-300 font-mono bg-black/30 p-2 rounded border border-white/5">
+                            {{ walletServices.accountKey() }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-black/40 border border-error/20 backdrop-blur-md mt-8">
+            <div class="card-body">
+                <h3 class="card-title text-error text-sm uppercase tracking-tighter">
+                    Zona de Seguridad
+                </h3>
+                <p class="text-xs text-gray-500">
+                    Tu sesión está encriptada y expira cada 10 minutos por protocolos de seguridad bancaria.
+                </p>
+                <div class="card-actions justify-end mt-4">
+                    <button (click)="authService.logout()" class="btn btn-outline btn-error btn-sm btn-block">
+                        Forzar Desconexión del Sistema
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

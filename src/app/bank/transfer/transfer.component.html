@@ -1,1 +1,140 @@
-<p>transfer works!</p>,
+<section class="min-h-screen bg-gradient-to-b from-black via-neutral/90 to-black p-6 lg:p-12 flex items-center justify-center relative overflow-hidden">
+    <div class="max-w-md w-full space-y-10">
+
+        <!--  -->
+        @if (!transactionResult()) {
+            <div class="animate-in fade-in duration-500">
+                <div class="stats shadow bg-neutral/60 border border-primary/30 w-full mb-8 rounded-xl backdrop-blur-md">
+                    <div class="stat">
+                        <div class="stat-title text-gray-400 font-mono text-xs uppercase">
+                            Saldo disponible
+                        </div>
+                        <div class="stat-value text-primary font-mono text-2xl tracking-tight">
+                            ₿ {{ walletService.balance() }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-neutral/40 backdrop-blur-md border border-white/10 p-8 shadow-2xl rounded-xl">
+                    <h2 class="text-2xl font-black text-white uppercase italic tracking-tight mb-6">
+                        Ejecutar Transferencia
+                    </h2>
+
+                    <form class="space-y-6" (submit)="$event.preventDefault()">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-gray-400 text-xs font-mono uppercase">
+                                    No. de Cuenta Destino
+                                </span>
+                            </label>
+                            <input #accountInput type="text" maxlength="10" placeholder="XXXXXXXXXX"
+                                (input)="toAccount.set(accountInput.value)"
+                                class="input input-bordered bg-black/50 border-white/10 focus:border-primary text-primary font-mono tracking-widest rounded-lg" />
+                        </div>
+
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text text-gray-400 text-xs font-mono uppercase">
+                                    Monto a Transferir
+                                </span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-4 top-3 text-primary font-bold">
+                                    ₿
+                                </span>
+                                <input #amountInput type="number" placeholder="0.00" min="0.01" step="0.01"
+                                    (input)="amount.set(amountInput.valueAsNumber)"
+                                    class="input input-bordered w-full pl-10 bg-black/50 border-white/10 focus:border-primary text-white font-mono rounded-lg" />
+                            </div>
+                        </div>
+
+                        <!--  -->
+                        @if (errorMessage()) {
+                            <div
+                                class="p-2 bg-error/20 border border-error/30 rounded text-xs text-error font-mono uppercase italic animate-pulse">
+                                ERROR: {{ errorMessage() }}
+                            </div>
+                        }
+
+                        <div class="p-3 bg-warning/10 border border-warning/30 rounded-lg">
+                            <p class="text-xs text-warning uppercase font-bold leading-tight">
+                                Las transacciones en la red T.R.I.T son irreversibles una vez confirmadas.
+                            </p>
+                        </div>
+
+                        <button type="button" (click)="execute()"
+                            [disabled]="isProcessing() || toAccount().length !== 10 || amount() <= 0"
+                            class="btn btn-primary w-full rounded-full shadow-[0_0_20px_rgba(87,255,180,0.3)] hover:shadow-primary/50 transition-transform hover:scale-105">
+
+                            <!--  -->
+                            @if (isProcessing()) {
+                                <span class="loading loading-spinner loading-sm"></span>
+                                Procesando...
+                            }
+                            <!--  -->
+                            @else {
+                                Confirmar Envío
+                            }
+                        </button>
+                    </form>
+                </div>
+
+                <div class="text-center mt-6">
+                    <a routerLink="/bank/wallet"
+                        class="text-xs text-gray-500 hover:text-error transition-colors uppercase font-mono">
+                        Cancelar Operación
+                    </a>
+                </div>
+            </div>
+        }
+
+        <!--  -->
+        @else {
+            <div class="animate-in zoom-in duration-500">
+                <div
+                    class="card bg-neutral/70 border border-primary/30 p-8 text-center space-y-6 rounded-xl shadow-[0_0_40px_rgba(87,255,180,0.2)]">
+                    <div
+                        class="w-20 h-20 bg-primary/20 text-primary rounded-full flex items-center justify-center mx-auto border border-primary/30 shadow-[0_0_20px_#57ffb4]">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+
+                    <div class="space-y-1">
+                        <h2 class="text-2xl font-black text-white uppercase italic tracking-tight">
+                            Envío Realizado
+                        </h2>
+                        <p class="text-xs font-mono text-primary uppercase tracking-widest">
+                            Protocolo Finalizado
+                        </p>
+                    </div>
+
+                    <div class="bg-black/50 p-5 rounded-xl border border-white/10 text-left font-mono space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 uppercase">
+                                Monto enviado
+                            </span>
+                            <span class="text-primary font-bold text-lg">
+                                ₿ {{ transactionResult().amount }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-400 uppercase">
+                                Destinatario
+                            </span>
+                            <span class="text-white text-sm">
+                                {{ transactionResult().to }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <button (click)="router.navigate(['/bank/wallet'])"
+                        class="btn btn-primary btn-outline btn-block rounded-full hover:shadow-primary/30 transition-transform hover:scale-105">
+                        Volver al Panel
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</section>
